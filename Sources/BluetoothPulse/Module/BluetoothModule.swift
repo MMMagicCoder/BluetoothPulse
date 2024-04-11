@@ -18,7 +18,6 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
     override init() {
         super.init()
         
-        //        `CBCentralManagerOptionShowPowerAlertKey: true` used to show user turn on bluetooth if it is off.
         centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
     }
     
@@ -35,7 +34,6 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
     
     //    MARK: Controling Functions
     func startScan() {
-        // 'CBCentralManagerScanOptionAllowDuplicatesKey: false' used for not showing duplicate Peripherals.
         let option = [CBCentralManagerScanOptionAllowDuplicatesKey: false]
         centralManager?.scanForPeripherals(withServices: nil, options: option)
         print("Scan Started...")
