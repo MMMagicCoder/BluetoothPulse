@@ -2,14 +2,14 @@ import SwiftUI
 import CoreBluetooth
 
 public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBCentralManagerDelegate {
-    @Published var isBleOn: Bool = false
-    @Published var isSearching: Bool = false
-    @Published var isConnected: Bool = false
+    @Published public var isBleOn: Bool = false
+    @Published public var isSearching: Bool = false
+    @Published public var isConnected: Bool = false
     
-    @Published var discoverPeripherals: [Peripheral] = []
-    @Published var discoverCharacteristics: [Characteristic] = []
-    @Published var discoverServices: [Service] = []
-    @Published var connectedPeripheral: Peripheral!
+    @Published public var discoverPeripherals: [Peripheral] = []
+    @Published public var discoverCharacteristics: [Characteristic] = []
+    @Published public var discoverServices: [Service] = []
+    @Published public var connectedPeripheral: Peripheral!
     
     private var centralManager: CBCentralManager!
     

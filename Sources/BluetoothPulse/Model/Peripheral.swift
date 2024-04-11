@@ -7,12 +7,12 @@ public class Peripheral: Identifiable, Equatable {
     
     public var id: UUID
     public var peripheral: CBPeripheral
-    var name: String
-    var advertisementData: [String: Any]
-    var rssi: Int
-    var discoverNumber: Int
+    public var name: String
+    public var advertisementData: [String: Any]
+    public var rssi: Int
+    public var discoverNumber: Int
     
-    init(_peripheral: CBPeripheral, _name: String, _advertisementData: [String : Any], _rssi: NSNumber, _discoverNumber: Int) {
+    public init(_peripheral: CBPeripheral, _name: String, _advertisementData: [String : Any], _rssi: NSNumber, _discoverNumber: Int) {
         id = UUID()
         peripheral = _peripheral
         name = _name

@@ -3,12 +3,12 @@ import CoreBluetooth
 public class Characteristic: Identifiable {
     public var id: UUID
     public var characteristic: CBCharacteristic
-    var description: String
-    var uuid: CBUUID
-    var readValue: String
-    var service: CBService
+    public var description: String
+    public var uuid: CBUUID
+    public var readValue: String
+    public var service: CBService
 
-    init(_characteristic: CBCharacteristic,
+    public init(_characteristic: CBCharacteristic,
          _description: String,
          _uuid: CBUUID,
          _readValue: String,

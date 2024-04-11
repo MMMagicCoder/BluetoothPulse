@@ -1,11 +1,11 @@
 import CoreBluetooth
 
-class Service: Identifiable {
-    var id: UUID
-    var uuid: CBUUID
-    var service: CBService
+public class Service: Identifiable {
+    public var id: UUID
+    public var uuid: CBUUID
+    public var service: CBService
 
-    init(_uuid: CBUUID,
+    public init(_uuid: CBUUID,
          _service: CBService) {
         
         id = UUID()
