@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreBluetooth
 
-class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBCentralManagerDelegate {
+public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBCentralManagerDelegate {
     @Published var isBleOn: Bool = false
     @Published var isSearching: Bool = false
     @Published var isConnected: Bool = false
@@ -59,13 +59,13 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
     }
     
     //MARK: CoreBluetooth CentralManager Delegete Functions
-    func didUpdateState(_ central: CBCentralManager) {
+    public func didUpdateState(_ central: CBCentralManager) {
         guard central.state == .poweredOn else { return isBleOn = false}
         isBleOn = true
         startScan()
     }
     
-    func didDiscover(_ central: CBCentralManager, peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber) {
+    public func didDiscover(_ central: CBCentralManager, peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber) {
         guard rssi.intValue < 0 else { return }
         
         let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? nil
@@ -98,14 +98,14 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
         }
     }
     
-    func didConnect(_ center: CBCentralManager, peripheral: CBPeripheral) {
+    public func didConnect(_ center: CBCentralManager, peripheral: CBPeripheral) {
         guard let connectedPeripheral = connectedPeripheral else { return }
         self.isConnected = true
         connectedPeripheral.peripheral.delegate = self
         connectedPeripheral.peripheral.discoverServices(nil)
     }
     
-    func didFailToConnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
+    public func didFailToConnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
         if let error = error {
             print("Failed to connect to peripheral: \(error.localizedDescription)")
         } else {
@@ -114,7 +114,7 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
         disconnectPeripheral()
     }
     
-    func didDisconnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
+    public func didDisconnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
         if let error = error {
             print("Disconnected from peripheral '\(peripheral.identifier.uuidString)' with error: \(error.localizedDescription)")
         } else {
@@ -123,20 +123,20 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
         resetConfiguration()
     }
     
-    func connectionEventDidOccur(_ central: CBCentralManager, event: CBConnectionEvent, peripheral: CBPeripheral) {
+    public func connectionEventDidOccur(_ central: CBCentralManager, event: CBConnectionEvent, peripheral: CBPeripheral) {
         
     }
     
-    func willRestoreState(_ central: CBCentralManager, dict: [String : Any]) {
+    public func willRestoreState(_ central: CBCentralManager, dict: [String : Any]) {
         
     }
     
-    func didUpdateANCSAuthorization(_ central: CBCentralManager, peripheral: CBPeripheral) {
+    public func didUpdateANCSAuthorization(_ central: CBCentralManager, peripheral: CBPeripheral) {
         
     }
     
     //MARK: CoreBluetooth Peripheral Delegate Functions
-    func didDiscoverServices(_ peripheral: CBPeripheral, error: Error?) {
+    public func didDiscoverServices(_ peripheral: CBPeripheral, error: Error?) {
         peripheral.services?.forEach { service in
             let foundService = Service(_uuid: service.uuid, _service: service)
             
@@ -145,7 +145,7 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
         }
     }
     
-    func didDiscoverCharacteristics(_ peripheral: CBPeripheral, service: CBService, error: Error?) {
+    public func didDiscoverCharacteristics(_ peripheral: CBPeripheral, service: CBService, error: Error?) {
         service.characteristics?.forEach { characteristic in
             let foundCharacteristic = Characteristic(
                 _characteristic: characteristic,
@@ -159,7 +159,7 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
         }
     }
     
-    func didUpdateValue(_ peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?) {
+    public func didUpdateValue(_ peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?) {
         guard let characteristicValue = characteristic.value else { return }
         
         if let index = discoverCharacteristics.firstIndex(where: { $0.uuid.uuidString == characteristic.uuid.uuidString }) {
@@ -168,7 +168,7 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
         }
     }
     
-    func didWriteValue(_ peripheral: CBPeripheral, descriptor: CBDescriptor, error: Error?) {
+    public func didWriteValue(_ peripheral: CBPeripheral, descriptor: CBDescriptor, error: Error?) {
         
     }
 }
