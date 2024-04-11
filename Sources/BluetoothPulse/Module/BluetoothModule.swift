@@ -15,7 +15,7 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     
     private let serviceUUID: CBUUID = CBUUID()
     
-    override init() {
+    override public init() {
         super.init()
         
         centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
