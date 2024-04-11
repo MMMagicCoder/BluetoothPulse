@@ -5,19 +5,18 @@ import PackageDescription
 
 let package = Package(
     name: "BluetoothPulse",
+    platforms: [
+        .iOS(.v14)
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "BluetoothPulse",
             targets: ["BluetoothPulse"]),
     ],
+    dependencies: [],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "BluetoothPulse"),
-        .testTarget(
-            name: "BluetoothPulseTests",
-            dependencies: ["BluetoothPulse"]),
+            name: "BluetoothPulse",
+            dependencies: [])
     ]
 )
