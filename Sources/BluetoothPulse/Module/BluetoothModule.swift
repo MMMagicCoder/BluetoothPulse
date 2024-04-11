@@ -33,27 +33,27 @@ class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBC
     }
     
     //    MARK: Controling Functions
-    func startScan() {
+    public func startScan() {
         let option = [CBCentralManagerScanOptionAllowDuplicatesKey: false]
         centralManager?.scanForPeripherals(withServices: nil, options: option)
         print("Scan Started...")
         isSearching = true
     }
     
-    func stopScan() {
+    public func stopScan() {
         disconnectPeripheral()
         centralManager?.stopScan()
         print("Scan Stoped!")
         isSearching = false
     }
     
-    func connectPeripheral(_ selectedPeripheral: Peripheral?) {
+    public func connectPeripheral(_ selectedPeripheral: Peripheral?) {
         guard let connectedPeripheral = selectedPeripheral else { return }
         self.connectedPeripheral = selectedPeripheral
         centralManager.connect(connectedPeripheral.peripheral, options: nil)
     }
     
-    func disconnectPeripheral() {
+    public func disconnectPeripheral() {
         guard let connectedPeripheral = connectedPeripheral else { return }
         centralManager.cancelPeripheralConnection(connectedPeripheral.peripheral)
     }

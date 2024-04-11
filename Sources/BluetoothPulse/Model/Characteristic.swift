@@ -1,8 +1,8 @@
 import CoreBluetooth
 
-class Characteristic: Identifiable {
-    var id: UUID
-    var characteristic: CBCharacteristic
+public class Characteristic: Identifiable {
+    public var id: UUID
+    public var characteristic: CBCharacteristic
     var description: String
     var uuid: CBUUID
     var readValue: String
