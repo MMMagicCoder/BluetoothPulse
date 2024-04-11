@@ -1,12 +1,12 @@
 import CoreBluetooth
 
-class Peripheral: Identifiable, Equatable {
-    static func == (lhs: Peripheral, rhs: Peripheral) -> Bool {
+public class Peripheral: Identifiable, Equatable {
+    public static func == (lhs: Peripheral, rhs: Peripheral) -> Bool {
         lhs.id == rhs.id && lhs.name == rhs.name
     }
     
-    var id: UUID
-    var peripheral: CBPeripheral
+    public var id: UUID
+    public var peripheral: CBPeripheral
     var name: String
     var advertisementData: [String: Any]
     var rssi: Int
