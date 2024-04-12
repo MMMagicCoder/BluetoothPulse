@@ -70,7 +70,7 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
         guard rssi.intValue < 0 else { return }
         
         let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? nil
-        var _name = "NoName"
+        var _name = "No Name"
         
         if peripheralName != nil {
             _name = String(peripheralName!)
