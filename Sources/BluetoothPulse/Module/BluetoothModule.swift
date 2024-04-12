@@ -1,10 +1,21 @@
 import SwiftUI
 import CoreBluetooth
 
-public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate, CBCentralManagerDelegate {
+public enum ConnectionStatus {
+    case connected
+    case disconnected
+    case searching
+    case connecting
+    case error
+}
+
+public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published public var isBleOn: Bool = false
     @Published public var isSearching: Bool = false
     @Published public var isConnected: Bool = false
+    @Published public var peripheralStatus: ConnectionStatus = .disconnected
+    @Published public var services: [CBUUID]? = nil
+    
     
     @Published public var discoverPeripherals: [Peripheral] = []
     @Published public var discoverCharacteristics: [Characteristic] = []
@@ -23,9 +34,7 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     
     private func resetConfiguration() {
         withAnimation {
-            isSearching = false
-            isConnected = false
-            
+            peripheralStatus = .disconnected
             discoverPeripherals = []
             discoverCharacteristics = []
             discoverServices = []
@@ -34,17 +43,17 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     
     //    MARK: Controling Functions
     public func startScan() {
+        peripheralStatus = .searching
         let option = [CBCentralManagerScanOptionAllowDuplicatesKey: false]
-        centralManager?.scanForPeripherals(withServices: nil, options: option)
+        centralManager?.scanForPeripherals(withServices: services, options: option)
         print("Scan Started...")
-        isSearching = true
     }
     
     public func stopScan() {
+        peripheralStatus = .disconnected
         disconnectPeripheral()
         centralManager?.stopScan()
         print("Scan Stoped!")
-        isSearching = false
     }
     
     public func connectPeripheral(_ selectedPeripheral: Peripheral?) {
@@ -57,14 +66,10 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
         guard let connectedPeripheral = connectedPeripheral else { return }
         centralManager.cancelPeripheralConnection(connectedPeripheral.peripheral)
     }
-    
-    //MARK: CoreBluetooth CentralManager Delegete Functions
-    public func didUpdateState(_ central: CBCentralManager) {
-        guard central.state == .poweredOn else { return isBleOn = false}
-        isBleOn = true
-        startScan()
-    }
-    
+}
+
+//MARK: CoreBluetooth CentralManager Delegete Functions
+extension CoreBluetoothModule: CBCentralManagerDelegate {
     public func didDiscover(_ central: CBCentralManager, peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber) {
         guard rssi.intValue < 0 else { return }
         
@@ -94,15 +99,26 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
             }
         } else {
             discoverPeripherals.append(discoveredPeripheral)
-            self.isSearching = false
+            peripheralStatus = .connecting
         }
+        
+        print("Did discover \(peripheral.name ?? "No name")")
+    }
+    
+    public func didUpdateState(_ central: CBCentralManager) {
+        guard central.state == .poweredOn else { return isBleOn = false}
+        isBleOn = true
+        startScan()
     }
     
     public func didConnect(_ center: CBCentralManager, peripheral: CBPeripheral) {
         guard let connectedPeripheral = connectedPeripheral else { return }
-        self.isConnected = true
+        peripheralStatus = .connected
         connectedPeripheral.peripheral.delegate = self
-        connectedPeripheral.peripheral.discoverServices(nil)
+        connectedPeripheral.peripheral.discoverServices(services)
+        centralManager.stopScan()
+        
+        print("\(peripheral.name ?? "No name") is connected.")
     }
     
     public func didFailToConnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
@@ -112,6 +128,12 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
             print("Failed to connect to peripheral with unknown error.")
         }
         disconnectPeripheral()
+        
+        peripheralStatus = .error
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.peripheralStatus = .disconnected
+        }
     }
     
     public func didDisconnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
@@ -121,6 +143,8 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
             print("Disconnected from peripheral '\(peripheral.identifier.uuidString)'")
         }
         resetConfiguration()
+        
+        peripheralStatus = .disconnected
     }
     
     public func connectionEventDidOccur(_ central: CBCentralManager, event: CBConnectionEvent, peripheral: CBPeripheral) {
