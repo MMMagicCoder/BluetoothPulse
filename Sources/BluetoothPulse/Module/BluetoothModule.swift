@@ -11,11 +11,7 @@ public enum ConnectionStatus {
 
 public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published public var isBleOn: Bool = false
-    @Published public var isSearching: Bool = false
-    @Published public var isConnected: Bool = false
     @Published public var peripheralStatus: ConnectionStatus = .disconnected
-    @Published public var services: [CBUUID]? = nil
-    
     
     @Published public var discoverPeripherals: [Peripheral] = []
     @Published public var discoverCharacteristics: [Characteristic] = []
@@ -45,7 +41,7 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     public func startScan() {
         peripheralStatus = .searching
         let option = [CBCentralManagerScanOptionAllowDuplicatesKey: false]
-        centralManager?.scanForPeripherals(withServices: services, options: option)
+        centralManager?.scanForPeripherals(withServices: nil, options: option)
         print("Scan Started...")
     }
     
@@ -115,7 +111,7 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
         guard let connectedPeripheral = connectedPeripheral else { return }
         peripheralStatus = .connected
         connectedPeripheral.peripheral.delegate = self
-        connectedPeripheral.peripheral.discoverServices(services)
+        connectedPeripheral.peripheral.discoverServices(nil)
         centralManager.stopScan()
         
         print("\(peripheral.name ?? "No name") is connected.")
