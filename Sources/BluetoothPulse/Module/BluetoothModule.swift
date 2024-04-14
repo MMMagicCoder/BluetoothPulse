@@ -75,76 +75,39 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
 extension CoreBluetoothModule: CBCentralManagerDelegate {
     public func didDiscover(_ central: CBCentralManager, peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber) {
         guard rssi.intValue < 0 else { return }
+
+        if let serviceUUIDs = serviceUUIDs,
+           let advertisedServices = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID],
+           !advertisedServices.contains(where: { serviceUUIDs.contains($0) }) {
+            return // Ignore if the peripheral does not advertise the required service UUID
+        }
+
+        let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? peripheral.name ?? "No Name"
         
-        if let serviceUUIDs = serviceUUIDs {
-            guard let advertisedServices = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID],
-                  !advertisedServices.filter({ serviceUUIDs.contains($0) }).isEmpty else {
-                let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? nil
-                var _name = "No Name"
-                
-                if peripheralName != nil {
-                    _name = String(peripheralName!)
-                } else if peripheral.name != nil {
-                    _name = String(peripheral.name!)
-                }
-                
-                let discoveredPeripheral: Peripheral = Peripheral(
-                    _peripheral: peripheral,
-                    _name: _name,
-                    _advertisementData: advertisementData,
-                    _rssi: rssi,
-                    _discoverNumber: 0)
-                
-                if let index = discoverPeripherals.firstIndex(where: { $0.peripheral.identifier.uuidString == peripheral.identifier.uuidString }) {
-                    if discoverPeripherals[index].discoverNumber % 50 == 0 {
-                        discoverPeripherals[index].name = _name
-                        discoverPeripherals[index].rssi = rssi.intValue
-                        discoverPeripherals[index].discoverNumber += 1
-                    } else {
-                        discoverPeripherals[index].discoverNumber += 1
-                    }
-                } else {
-                    discoverPeripherals.append(discoveredPeripheral)
-                    peripheralStatus = .connecting
-                }
-                
-                print("Did discover \(peripheral.name ?? "No name")")
-                return
+        let discoveredPeripheral = Peripheral(
+            _peripheral: peripheral,
+            _name: peripheralName,
+            _advertisementData: advertisementData,
+            _rssi: rssi,
+            _discoverNumber: 0
+        )
+
+        if let index = discoverPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }) {
+            if discoverPeripherals[index].discoverNumber % 50 == 0 {
+                discoverPeripherals[index].name = peripheralName
+                discoverPeripherals[index].rssi = rssi.intValue
+                discoverPeripherals[index].discoverNumber += 1
+            } else {
+                discoverPeripherals[index].discoverNumber += 1
             }
         } else {
-            
-            let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? nil
-            var _name = "No Name"
-            
-            if peripheralName != nil {
-                _name = String(peripheralName!)
-            } else if peripheral.name != nil {
-                _name = String(peripheral.name!)
-            }
-            
-            let discoveredPeripheral: Peripheral = Peripheral(
-                _peripheral: peripheral,
-                _name: _name,
-                _advertisementData: advertisementData,
-                _rssi: rssi,
-                _discoverNumber: 0)
-            
-            if let index = discoverPeripherals.firstIndex(where: { $0.peripheral.identifier.uuidString == peripheral.identifier.uuidString }) {
-                if discoverPeripherals[index].discoverNumber % 50 == 0 {
-                    discoverPeripherals[index].name = _name
-                    discoverPeripherals[index].rssi = rssi.intValue
-                    discoverPeripherals[index].discoverNumber += 1
-                } else {
-                    discoverPeripherals[index].discoverNumber += 1
-                }
-            } else {
-                discoverPeripherals.append(discoveredPeripheral)
-                peripheralStatus = .connecting
-            }
-            
-            print("Did discover \(peripheral.name ?? "No name")")
+            discoverPeripherals.append(discoveredPeripheral)
+            peripheralStatus = .connecting
         }
+
+        print("Did discover \(peripheralName)")
     }
+
     
     public func didUpdateState(_ central: CBCentralManager) {
         switch central.state {
