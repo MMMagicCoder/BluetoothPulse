@@ -38,10 +38,10 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     }
     
     //    MARK: Controling Functions
-    public func startScan() {
+    public func startScan(forService: [CBUUID]? = nil) {
         peripheralStatus = .searching
         let option = [CBCentralManagerScanOptionAllowDuplicatesKey: false]
-        centralManager?.scanForPeripherals(withServices: nil, options: option)
+        centralManager?.scanForPeripherals(withServices: forService, options: option)
         print("Scan Started...")
     }
     
@@ -105,7 +105,7 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
         switch central.state {
            case .poweredOn:
                isBleOn = true
-               startScan()
+            startScan()
            case .poweredOff:
                isBleOn = false
                resetConfiguration() // Reset any ongoing scans or connections
