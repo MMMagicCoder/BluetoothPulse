@@ -39,7 +39,7 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     }
     
     //    MARK: Controling Functions
-    public func startScan(serviceUUIDs: [CBUUID]? = nil) {
+    public func startScan() {
         peripheralStatus = .searching
         var scanOptions: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: false]
         
