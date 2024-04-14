@@ -78,8 +78,8 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
 
         if let serviceUUIDs = serviceUUIDs,
            let advertisedServices = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID],
-           !advertisedServices.contains(where: { serviceUUIDs.contains($0) }) {
-            return // Ignore if the peripheral does not advertise the required service UUID
+           !serviceUUIDs.contains(where: { advertisedServices.contains($0) }) {
+            return // Ignore if the peripheral does not advertise any of the required service UUIDs
         }
 
         let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? peripheral.name ?? "No Name"
@@ -107,7 +107,6 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
 
         print("Did discover \(peripheralName)")
     }
-
     
     public func didUpdateState(_ central: CBCentralManager) {
         switch central.state {
