@@ -2,8 +2,11 @@ import CoreBluetooth
 
 public class Peripheral: Identifiable, Equatable {
     public static func == (lhs: Peripheral, rhs: Peripheral) -> Bool {
-        lhs.id == rhs.id && lhs.name == rhs.name
-    }
+         return lhs.id == rhs.id &&
+                lhs.name == rhs.name &&
+                NSDictionary(dictionary: lhs.advertisementData).isEqual(to: rhs.advertisementData) &&
+                lhs.rssi == rhs.rssi
+     }
     
     public var id: UUID
     public var peripheral: CBPeripheral

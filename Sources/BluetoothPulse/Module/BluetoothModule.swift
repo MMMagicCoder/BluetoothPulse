@@ -20,7 +20,7 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
     
     private var centralManager: CBCentralManager!
     
-    private let serviceUUID: CBUUID = CBUUID()
+//    private let serviceUUID: CBUUID = CBUUID()
     
     override public init() {
         super.init()
@@ -102,9 +102,25 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
     }
     
     public func didUpdateState(_ central: CBCentralManager) {
-        guard central.state == .poweredOn else { return isBleOn = false}
-        isBleOn = true
-        startScan()
+        switch central.state {
+           case .poweredOn:
+               isBleOn = true
+               startScan()
+           case .poweredOff:
+               isBleOn = false
+               resetConfiguration() // Reset any ongoing scans or connections
+               print("Bluetooth is powered off.")
+           case .resetting:
+               print("Bluetooth is resetting.")
+           case .unauthorized:
+               print("Bluetooth is unauthorized.")
+           case .unknown:
+               print("Bluetooth state is unknown.")
+           case .unsupported:
+               print("Bluetooth is unsupported.")
+           @unknown default:
+               print("Unknown Bluetooth state.")
+           }
     }
     
     public func didConnect(_ center: CBCentralManager, peripheral: CBPeripheral) {
@@ -119,17 +135,27 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
     
     public func didFailToConnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
         if let error = error {
-            print("Failed to connect to peripheral: \(error.localizedDescription)")
-        } else {
-            print("Failed to connect to peripheral with unknown error.")
-        }
-        disconnectPeripheral()
-        
-        peripheralStatus = .error
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.peripheralStatus = .disconnected
-        }
+              print("Failed to connect to peripheral: \(error.localizedDescription)")
+              
+              if let cbError = error as? CBError {
+                  switch cbError.code {
+                  case .connectionFailed:
+                      print("Peripheral connection failed.")
+                  case .peripheralDisconnected:
+                      print("Peripheral disconnected.")
+                  default:
+                      print("Unknown error: \(cbError)")
+                  }
+              }
+          } else {
+              print("Failed to connect to peripheral with unknown error.")
+          }
+          disconnectPeripheral()
+          peripheralStatus = .error
+          
+          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+              self.peripheralStatus = .disconnected
+          }
     }
     
     public func didDisconnect(_ central: CBCentralManager, peripheral: CBPeripheral, error: Error?) {
