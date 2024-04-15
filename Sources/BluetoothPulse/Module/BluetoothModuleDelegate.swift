@@ -1,6 +1,6 @@
 import CoreBluetooth
 
-extension CoreBluetoothModule {
+extension BluetoothModule {
     public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         didDiscoverServices(peripheral, error: error)
     }

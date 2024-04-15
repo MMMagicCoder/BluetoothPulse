@@ -20,7 +20,7 @@ public enum ConnectionStatus {
     case error
 }
 
-public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate {
+public class BluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published public var isBleOn: Bool = false
     @Published public var peripheralStatus: ConnectionStatus = .disconnected
     
@@ -118,7 +118,7 @@ public class CoreBluetoothModule: NSObject, ObservableObject, CBPeripheralDelega
 }
 
 //MARK: CoreBluetooth CentralManager Delegete Functions
-extension CoreBluetoothModule: CBCentralManagerDelegate {
+extension BluetoothModule: CBCentralManagerDelegate {
     /**
      - Description: Called when a peripheral is discovered during scanning.
      - Parameters:

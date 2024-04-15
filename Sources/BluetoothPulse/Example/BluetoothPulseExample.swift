@@ -4,7 +4,7 @@ import CoreBluetooth
 struct BluetoothPulseExample: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @StateObject var bluetooth = CoreBluetoothModule()
+    @StateObject var bluetooth = BluetoothModule()
     @State private var showDetailView = false
     
     var body: some View {
