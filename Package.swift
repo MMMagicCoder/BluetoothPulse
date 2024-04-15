@@ -7,7 +7,7 @@ let package = Package(
     name: "BluetoothPulse",
     platforms: [
         .iOS(.v14),
-        .macOS(.v11)
+        .macOS(.v12)
     ],
     products: [
         .library(
