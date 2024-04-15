@@ -79,7 +79,7 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
         if let serviceUUIDs = serviceUUIDs,
            let advertisedServices = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID],
            !serviceUUIDs.contains(where: { advertisedServices.contains($0) }) {
-            return // Ignore if the peripheral does not advertise any of the required service UUIDs
+            return
         }
 
         let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? peripheral.name ?? "No Name"
@@ -190,7 +190,13 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
     
     //MARK: CoreBluetooth Peripheral Delegate Functions
     public func didDiscoverServices(_ peripheral: CBPeripheral, error: Error?) {
-        peripheral.services?.forEach { service in
+        if let error = error {
+               print("Error discovering services: \(error.localizedDescription)")
+               return
+           }
+        
+        peripheral.services?.forEach { [weak self] service in
+            guard let self = self else { return }
             let foundService = Service(_uuid: service.uuid, _service: service)
             
             discoverServices.append(foundService)
@@ -199,7 +205,13 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
     }
     
     public func didDiscoverCharacteristics(_ peripheral: CBPeripheral, service: CBService, error: Error?) {
-        service.characteristics?.forEach { characteristic in
+        if let error = error {
+                print("Error discovering characteristics for service \(service.uuid): \(error.localizedDescription)")
+                return
+            }
+        
+        service.characteristics?.forEach { [weak self] characteristic in
+            guard let self = self else { return }
             let foundCharacteristic = Characteristic(
                 _characteristic: characteristic,
                 _description: "",
@@ -213,6 +225,11 @@ extension CoreBluetoothModule: CBCentralManagerDelegate {
     }
     
     public func didUpdateValue(_ peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+                print("Error updating value for characteristic \(characteristic.uuid): \(error.localizedDescription)")
+                return
+            }
+        
         guard let characteristicValue = characteristic.value else { return }
         
         if let index = discoverCharacteristics.firstIndex(where: { $0.uuid.uuidString == characteristic.uuid.uuidString }) {
