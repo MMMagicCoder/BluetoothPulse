@@ -171,7 +171,6 @@ extension BluetoothModule: CBCentralManagerDelegate {
         switch central.state {
         case .poweredOn:
             isBleOn = true
-            startScan()
         case .poweredOff:
             isBleOn = false
             resetConfiguration() 
