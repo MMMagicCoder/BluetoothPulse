@@ -1,18 +1,22 @@
-//
-//  SwiftUIView.swift
-//  
-//
-//  Created by mohammadmahdi moayeri on 4/16/24.
-//
-
 import SwiftUI
+import CoreBluetooth
 
 struct DetailView: View {
+    let peripheral: Peripheral
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            Section("ID") {
+                HStack {
+                    Text("ID: ")
+                    Text("\(peripheral.id)")
+                }
+            }
+            
+            Section("Services") {
+//                ForEach(peripheral.advertisementData)
+            }
+        }
+        .navigationTitle(peripheral.name)
     }
-}
-
-#Preview {
-    DetailView()
 }

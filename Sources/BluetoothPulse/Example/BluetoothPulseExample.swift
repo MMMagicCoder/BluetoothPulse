@@ -3,15 +3,22 @@ import CoreBluetooth
 
 struct BluetoothPulseExample: View {
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var bluetooth: BluetoothModule
     
-    @StateObject var bluetooth = BluetoothModule()
     @State private var showDetailView = false
+    @State private var isBLEOn: Bool = false
     
     var body: some View {
         NavigationView {
             ZStack {
                 if bluetooth.discoverPeripherals.count > 0 {
                     List {
+                        Section {
+                            HStack {
+                                Toggle("Bluetooth", isOn: $isBLEOn)
+                            }
+                        }
+
                         Section("Devices") {
                             ForEach(bluetooth.discoverPeripherals) { peripheral in
                                 HStack {
@@ -39,7 +46,7 @@ struct BluetoothPulseExample: View {
                         }
                     }
                     .background(
-                        NavigationLink(destination: DetailView(), isActive: $showDetailView) {
+                        NavigationLink(destination: Text(""), isActive: $showDetailView) {
                             EmptyView()
                         }
                         .opacity(0)
@@ -47,11 +54,12 @@ struct BluetoothPulseExample: View {
                 }
             }
             .navigationTitle("Devices")
-            .onAppear {
-                bluetooth.startScan()
-            }
-            .onDisappear {
-                bluetooth.stopScan()
+            .onChange(of: isBLEOn) { newValue in
+                if newValue {
+                    bluetooth.startScan()
+                } else {
+                    bluetooth.stopScan()
+                }
             }
         }
     }

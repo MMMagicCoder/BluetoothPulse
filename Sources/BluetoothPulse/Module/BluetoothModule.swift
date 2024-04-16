@@ -126,10 +126,6 @@ extension BluetoothModule: CBCentralManagerDelegate {
         - peripheral: The discovered peripheral.
         - advertisementData: A dictionary containing advertisement data.
         - rssi: The received signal strength indicator (RSSI) of the peripheral.
-     - Behavior:
-     Filters discovered peripherals based on RSSI and advertised service UUIDs.
-     Manages discovered peripherals and updates their properties.
-     Prints a message indicating the discovery of a peripheral.
      */
     public func didDiscover(_ central: CBCentralManager, peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber) {
         guard rssi.intValue < 0 else { return }
