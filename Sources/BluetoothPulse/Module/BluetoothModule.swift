@@ -114,7 +114,7 @@ public class BluetoothModule: NSObject, ObservableObject, CBPeripheralDelegate {
     public func disconnectPeripheral() {
         guard let connectedPeripheral = connectedPeripheral else { return }
         centralManager.cancelPeripheralConnection(connectedPeripheral.peripheral)
-        startScan()
+//        startScan()
     }
 }
 
