@@ -4,8 +4,12 @@
 
 This library contains a SwiftUI Bluetooth Module designed to facilitate Bluetooth connectivity within SwiftUI apps. Whether you're building an iOS, macOS app, this module provides a comprehensive solution for integrating Bluetooth functionality seamlessly into your SwiftUI project.
 
-Features:
+#### Features:
   - Connection Status Tracking: Monitor the status of Bluetooth connections with clear and concise enums, facilitating easy handling of various connection states.
+  - Peripheral Discovery: Discover nearby Bluetooth peripherals and retrieve relevant information such as local name, advertisement data, and signal strength.
+  - Peripheral Connection: Establish connections with Bluetooth peripherals and handle connection events seamlessly.
+  - Service and Characteristic Discovery: Discover services and characteristics of connected peripherals for data exchange.
+  - SwiftUI Integration: Designed for use within SwiftUI applications, ensuring a smooth and native-like user experience.
 
 ## Table of contents
    - [Requirements](#requirements)
