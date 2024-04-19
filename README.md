@@ -19,3 +19,22 @@ This library contains a SwiftUI Bluetooth Module designed to facilitate Bluetoot
      - [Customization](#customization)
    - [Contribution](#contribution)
    - [License](#license)
+
+## Requirements
+<a id="requirements"></a>
+   - SwiftUI
+   - iOS 15.0 or above
+
+## Installation
+<a id="installation"></a>
+You can access Tabfinity through [Swift Package Manager](https://github.com/apple/swift-package-manager).
+### Swift Package Manager (SPM)
+<a id="spm"></a>
+In xcode select:
+```
+File > Swift Packages > Add Package Dependency...
+```
+Then paste this URL:
+```
+https://github.com/MMMagicCoder/BluetoothPulse.git
+```
