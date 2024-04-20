@@ -43,13 +43,26 @@ https://github.com/MMMagicCoder/BluetoothPulse.git
 
 <a id="usage"></a>
 
-1. Initialization: Create an instance of BluetoothModule to start managing Bluetooth connections.
+- Initialization: Create an instance of BluetoothModule to start managing Bluetooth connections.
 
 ```swift
 let bluetoothModule = BluetoothModule()
 ```
 
-2. Scan for Peripherals: Start scanning for nearby peripherals using the startScan() method.
+- Scan for Peripherals: Start scanning for nearby peripherals using the startScan() method.
 ```swift
 bluetoothModule.startScan()
 ```
+
+- Connect to a Peripheral: Initiate a connection to a discovered peripheral by calling connectPeripheral(_:) method with the selected peripheral.
+```swift
+bluetoothModule.connectPeripheral(selectedPeripheral)
+```
+
+- Discover Peripherals, Services, and Characteristics: Access the discovered peripherals, services, and characteristics through the corresponding variables.
+```swift
+let discoveredPeripherals = bluetoothModule.discoverPeripherals
+let discoveredServices = bluetoothModule.discoverServices
+let discoveredCharacteristics = bluetoothModule.discoverCharacteristics
+```
+
