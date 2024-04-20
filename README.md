@@ -38,3 +38,18 @@ Then paste this URL:
 ```
 https://github.com/MMMagicCoder/BluetoothPulse.git
 ```
+
+## Usage
+
+<a id="usage"></a>
+
+1. Initialization: Create an instance of BluetoothModule to start managing Bluetooth connections.
+
+```swift
+let bluetoothModule = BluetoothModule()
+```
+
+2. Scan for Peripherals: Start scanning for nearby peripherals using the startScan() method.
+```swift
+bluetoothModule.startScan()
+```
