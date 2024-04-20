@@ -16,7 +16,6 @@ This library contains a SwiftUI Bluetooth Module designed to facilitate Bluetoot
    - [Installation](#installation)
      - [Swift Package Manager (SPM)](#spm)
    - [Usage](#usage)
-     - [Customization](#customization)
    - [Contribution](#contribution)
    - [License](#license)
 
@@ -59,10 +58,29 @@ bluetoothModule.startScan()
 bluetoothModule.connectPeripheral(selectedPeripheral)
 ```
 
+- Access Connected Peripheral: Access the currently connected peripheral through the connectedPeripheral variable.
+```swift
+let connectedPeripheral = bluetoothModule.connectedPeripheral
+```
+
 - Discover Peripherals, Services, and Characteristics: Access the discovered peripherals, services, and characteristics through the corresponding variables.
 ```swift
 let discoveredPeripherals = bluetoothModule.discoverPeripherals
 let discoveredServices = bluetoothModule.discoverServices
 let discoveredCharacteristics = bluetoothModule.discoverCharacteristics
 ```
+
+Other useful functionalities include:
+
+- Stop Scanning: Halt the scanning process for nearby peripherals using the stopScan() method.
+```swift
+bluetoothModule.stopScan()
+```
+
+- Disconnect from a Peripheral: Terminate the connection with the currently connected peripheral using the disconnectPeripheral() method.
+```swift
+bluetoothModule.disconnectPeripheral()
+```
+
+
 
