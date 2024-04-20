@@ -82,5 +82,12 @@ bluetoothModule.stopScan()
 bluetoothModule.disconnectPeripheral()
 ```
 
+## Contribution
+<a id="contribution"></a>
+If you encounter any challenges, please feel free to [open an issue](https://github.com/MMMagicCoder/bluetoothPulse/issues/new). Additionally, we welcome and appreciate pull requests for any improvements or contributions.
 
+## License
+<a id="license"></a>
+bluetoothPulse is under the terms and conditions of the MIT license.
+```
 
